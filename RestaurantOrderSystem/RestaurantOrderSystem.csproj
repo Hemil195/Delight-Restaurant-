@@ -126,8 +126,6 @@
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Data\RestaurantDbContext.cs" />
-    <Compile Include="Data\RestaurantDbContextFixed.cs" />
-    <Compile Include="Data\RestaurantDbContextNew.cs" />
     <Compile Include="Data\RestaurantDbInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
