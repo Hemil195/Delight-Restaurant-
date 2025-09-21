@@ -1,0 +1,113 @@
+@model RestaurantOrderSystem.Models.MenuItem
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded shadow" style="width: 100%; height: 400px; object-fit: cover;"
+                     onerror="this.src='/images/menu/default-food.jpg'">
+            }
+            else
+            {
+                <div class="bg-light rounded shadow d-flex align-items-center justify-content-center" style="width: 100%; height: 400px;">
+                    <i class="fas fa-utensils fa-5x text-muted"></i>
+                </div>
+            }
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="mb-3">
+                @if (Model.Category != null)
+                {
+                    <span class="badge bg-secondary mb-2">@Model.Category.Name</span>
+                }
+                @if (Model.IsFeatured)
+                {
+                    <span class="badge bg-warning text-dark mb-2">Featured</span>
+                }
+            </div>
+            
+            <h1 class="display-5">@Model.Name</h1>
+            
+            <div class="mb-4">
+                <span class="display-6 text-primary fw-bold">@Model.Price.ToString("C")</span>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <p class="lead">@Model.Description</p>
+                </div>
+            }
+            
+            @if (Model.IsAvailable)
+            {
+                <div class="mb-4">
+                    @using (Html.BeginForm("AddToCart", "Menu", FormMethod.Post, new { @class = "d-flex align-items-center gap-3" }))
+                    {
+                        @Html.Hidden("itemId", Model.ItemID)
+                        
+                        <div class="input-group" style="max-width: 150px;">
+                            <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
+                            <input type="number" name="quantity" value="1" min="1" max="99" class="form-control text-center" id="quantity">
+                            <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    }
+                </div>
+                
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> This item is available for ordering.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> This item is currently unavailable.
+                </div>
+            }
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                @Html.ActionLink("Back to Menu", "Index", "Menu", null, new { @class = "btn btn-outline-secondary" })
+                
+                @if (Model.Category != null)
+                {
+                    @Html.ActionLink("More from " + Model.Category.Name, "Index", "Menu", new { categoryId = Model.CategoryID }, new { @class = "btn btn-outline-info" })
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function increaseQuantity() {
+            var quantityInput = document.getElementById('quantity');
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue < 99) {
+                quantityInput.value = currentValue + 1;
+            }
+        }
+
+        function decreaseQuantity() {
+            var quantityInput = document.getElementById('quantity');
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        }
+    </script>
+}

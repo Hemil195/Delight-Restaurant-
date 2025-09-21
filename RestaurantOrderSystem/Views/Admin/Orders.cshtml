@@ -1,0 +1,116 @@
+@model IEnumerable<RestaurantOrderSystem.Models.Order>
+
+@{
+    ViewBag.Title = "Manage Orders";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-shopping-bag"></i> Manage Orders</h2>
+        <div>
+            <span class="badge bg-warning me-2">@Model.Count(o => o.Status == RestaurantOrderSystem.Models.OrderStatus.Pending) Pending</span>
+            <span class="badge bg-primary me-2">@Model.Count(o => o.Status == RestaurantOrderSystem.Models.OrderStatus.Preparing) Preparing</span>
+            <span class="badge bg-success">@Model.Count(o => o.Status == RestaurantOrderSystem.Models.OrderStatus.Ready) Ready</span>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Contact</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Order Date</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.OrderBy(o => o.Status).ThenByDescending(o => o.OrderDate))
+                            {
+                                <tr class="@(GetRowClass(order.Status))">
+                                    <td><strong>#@order.OrderID</strong></td>
+                                    <td>
+                                        <strong>@order.CustomerName</strong>
+                                        @if (!string.IsNullOrEmpty(order.SpecialInstructions))
+                                        {
+                                            <br><small class="text-muted"><i class="fas fa-comment"></i> Has special instructions</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small>
+                                            @order.CustomerEmail<br>
+                                            @order.CustomerPhone
+                                        </small>
+                                    </td>
+                                    <td><strong>@order.TotalAmount.ToString("C")</strong></td>
+                                    <td>
+                                        <span class="badge bg-@(GetStatusColor(order.Status))">
+                                            @order.Status.ToString()
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @order.OrderDate.ToString("MM/dd/yyyy")<br>
+                                        <small class="text-muted">@order.OrderDate.ToString("HH:mm")</small>
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.ActionLink("Details", "OrderDetails", "Admin", new { id = order.OrderID }, new { @class = "btn btn-sm btn-outline-primary" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+            <h4>No Orders Found</h4>
+            <p class="text-muted">Orders will appear here once customers start placing them.</p>
+            @Html.ActionLink("View Customer Menu", "Index", "Menu", null, new { @class = "btn btn-primary", target = "_blank" })
+        </div>
+    }
+
+    <div class="mt-4">
+        @Html.ActionLink("Back to Dashboard", "Dashboard", "Admin", null, new { @class = "btn btn-outline-secondary" })
+    </div>
+</div>
+
+@functions {
+    string GetStatusColor(RestaurantOrderSystem.Models.OrderStatus status)
+    {
+        switch (status)
+        {
+            case RestaurantOrderSystem.Models.OrderStatus.Pending: return "warning";
+            case RestaurantOrderSystem.Models.OrderStatus.Confirmed: return "info";
+            case RestaurantOrderSystem.Models.OrderStatus.Preparing: return "primary";
+            case RestaurantOrderSystem.Models.OrderStatus.Ready: return "success";
+            case RestaurantOrderSystem.Models.OrderStatus.Completed: return "secondary";
+            case RestaurantOrderSystem.Models.OrderStatus.Cancelled: return "danger";
+            default: return "secondary";
+        }
+    }
+
+    string GetRowClass(RestaurantOrderSystem.Models.OrderStatus status)
+    {
+        switch (status)
+        {
+            case RestaurantOrderSystem.Models.OrderStatus.Pending:
+            case RestaurantOrderSystem.Models.OrderStatus.Confirmed:
+            case RestaurantOrderSystem.Models.OrderStatus.Preparing:
+                return "table-warning";
+            case RestaurantOrderSystem.Models.OrderStatus.Ready:
+                return "table-success";
+            default: return "";
+        }
+    }
+}

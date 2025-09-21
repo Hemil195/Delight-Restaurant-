@@ -1,0 +1,67 @@
+@model IEnumerable<RestaurantOrderSystem.Models.Category>
+
+@{
+    ViewBag.Title = "Manage Categories";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-list"></i> Manage Categories</h2>
+        @Html.ActionLink("Add New Category", "CreateCategory", "Admin", null, new { @class = "btn btn-primary" })
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var category in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(category.ImageUrl))
+                        {
+                            <img src="@category.ImageUrl" class="card-img-top" alt="@category.Name" style="height: 200px; object-fit: cover;"
+                                 onerror="this.src='/images/categories/default-category.jpg'">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-list fa-3x text-muted"></i>
+                            </div>
+                        }
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@category.Name</h5>
+                            <p class="card-text flex-grow-1">@(category.Description ?? "No description provided.")</p>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group" role="group">
+                                        @Html.ActionLink("Edit", "EditCategory", "Admin", new { id = category.CategoryID }, new { @class = "btn btn-sm btn-outline-primary" })
+                                        @Html.ActionLink("Delete", "DeleteCategory", "Admin", new { id = category.CategoryID }, new { @class = "btn btn-sm btn-outline-danger" })
+                                    </div>
+                                    @Html.ActionLink("View Items", "Index", "Menu", new { categoryId = category.CategoryID }, new { @class = "btn btn-sm btn-outline-info", target = "_blank" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-list fa-3x text-muted mb-3"></i>
+            <h4>No Categories Found</h4>
+            <p class="text-muted">Create categories to organize your menu items.</p>
+            @Html.ActionLink("Add First Category", "CreateCategory", "Admin", null, new { @class = "btn btn-primary btn-lg" })
+        </div>
+    }
+
+    <div class="mt-4">
+        <div class="d-flex justify-content-between">
+            @Html.ActionLink("Back to Dashboard", "Dashboard", "Admin", null, new { @class = "btn btn-outline-secondary" })
+            @Html.ActionLink("Manage Menu Items", "MenuItems", "Admin", null, new { @class = "btn btn-outline-info" })
+        </div>
+    </div>
+</div>

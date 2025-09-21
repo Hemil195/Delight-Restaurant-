@@ -1,0 +1,149 @@
+@model RestaurantOrderSystem.Models.ShoppingCart
+
+@{
+    ViewBag.Title = "Shopping Cart";
+}
+
+<div class="container mt-4">
+    <h2><i class="fas fa-shopping-cart"></i> Your Shopping Cart</h2>
+
+    @if (Model.Items.Any())
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("ClearCart", "Cart", FormMethod.Post))
+                        {
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title">Cart Items (@Model.Items.Count)</h5>
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to clear your cart?')">
+                                    <i class="fas fa-trash"></i> Clear Cart
+                                </button>
+                            </div>
+                        }
+
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="row align-items-center border-bottom py-3">
+                                <div class="col-md-2">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Name" class="img-fluid rounded" style="height: 80px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                            <i class="fas fa-utensils text-muted"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="mb-1">@item.Name</h6>
+                                    <small class="text-muted">@item.Price.ToString("C") each</small>
+                                </div>
+                                <div class="col-md-3">
+                                    @using (Html.BeginForm("UpdateCart", "Cart", FormMethod.Post, new { @class = "d-flex align-items-center" }))
+                                    {
+                                        @Html.Hidden("itemId", item.ItemID)
+                                        <div class="input-group input-group-sm">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity(@item.ItemID)">-</button>
+                                            <input type="number" name="quantity" value="@item.Quantity" min="1" max="99" class="form-control text-center" id="quantity_@item.ItemID" onchange="updateCart(@item.ItemID)">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity(@item.ItemID)">+</button>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <strong>@item.Subtotal.ToString("C")</strong>
+                                </div>
+                                <div class="col-md-1 text-end">
+                                    @using (Html.BeginForm("RemoveFromCart", "Cart", FormMethod.Post))
+                                    {
+                                        @Html.Hidden("itemId", item.ItemID)
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Remove item">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <strong>@Model.GetTotal().ToString("C")</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (8%):</span>
+                            <span>@((Model.GetTotal() * 0.08m).ToString("C"))</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-primary">@((Model.GetTotal() * 1.08m).ToString("C"))</strong>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            @Html.ActionLink("Proceed to Checkout", "Checkout", "Order", null, new { @class = "btn btn-primary btn-lg" })
+                            @Html.ActionLink("Continue Shopping", "Index", "Menu", null, new { @class = "btn btn-outline-secondary" })
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6>Need Help?</h6>
+                        <p class="card-text small text-muted">
+                            Questions about your order? Contact us at (555) 123-4567 or email support@restaurant.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+            <h4>Your cart is empty</h4>
+            <p class="text-muted mb-4">Add some delicious items from our menu to get started!</p>
+            @Html.ActionLink("Browse Menu", "Index", "Menu", null, new { @class = "btn btn-primary btn-lg" })
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function increaseQuantity(itemId) {
+            var quantityInput = document.getElementById('quantity_' + itemId);
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue < 99) {
+                quantityInput.value = currentValue + 1;
+                updateCart(itemId);
+            }
+        }
+
+        function decreaseQuantity(itemId) {
+            var quantityInput = document.getElementById('quantity_' + itemId);
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                updateCart(itemId);
+            }
+        }
+
+        function updateCart(itemId) {
+            var quantityInput = document.getElementById('quantity_' + itemId);
+            var form = quantityInput.closest('form');
+            form.submit();
+        }
+    </script>
+}

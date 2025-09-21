@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Contact Information</h4>
+                    <p class="card-text">
+                        Need help with the Restaurant Order System? Have questions about menu management? 
+                        We're here to help you get the most out of your restaurant management experience.
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Support</h5>
+                            <p>
+                                <strong>Email:</strong> support@restaurantordersystem.com<br>
+                                <strong>Phone:</strong> +1 (555) 123-4567<br>
+                                <strong>Hours:</strong> Monday - Friday, 9 AM - 6 PM EST
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Sales</h5>
+                            <p>
+                                <strong>Email:</strong> sales@restaurantordersystem.com<br>
+                                <strong>Phone:</strong> +1 (555) 987-6543<br>
+                                <strong>Hours:</strong> Monday - Friday, 8 AM - 8 PM EST
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Help</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong>Menu Management:</strong><br>
+                            @Html.ActionLink("View Menu Items", "Index", "Menu", null, new { @class = "text-white" })
+                        </li>
+                        <li class="mb-2">
+                            <strong>Add New Item:</strong><br>
+                            @Html.ActionLink("Create Menu Item", "Create", "Menu", null, new { @class = "text-white" })
+                        </li>
+                        <li class="mb-2">
+                            <strong>System Info:</strong><br>
+                            @Html.ActionLink("About", "About", "Home", null, new { @class = "text-white" })
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Frequently Asked Questions</h5>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    How do I add a new menu item?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Navigate to the Menu section and click "Add New Menu Item". Fill in the item name and price, then click "Create" to save.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    How do I edit or delete menu items?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    In the Menu list, use the "Edit" button to modify an item or "Delete" to remove it. Deletions require confirmation.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    Is my menu data secure?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, all menu data is stored securely in a SQL Server database with proper validation and security measures.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

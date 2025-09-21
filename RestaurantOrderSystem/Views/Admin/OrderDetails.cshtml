@@ -1,0 +1,229 @@
+@model RestaurantOrderSystem.Models.Order
+
+@{
+    ViewBag.Title = "Order Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-receipt"></i> Order #@Model.OrderID Details</h2>
+        <div>
+            <span class="badge bg-@(GetStatusColor(Model.Status)) fs-6">@Model.Status.ToString()</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Order Information -->
+        <div class="col-lg-8">
+            <!-- Customer Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-user"></i> Customer Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> @Model.CustomerName</p>
+                            <p><strong>Email:</strong> @Model.CustomerEmail</p>
+                            <p><strong>Phone:</strong> @Model.CustomerPhone</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Order Date:</strong> @Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
+                            <p><strong>Total Amount:</strong> @Model.TotalAmount.ToString("C")</p>
+                        </div>
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(Model.SpecialInstructions))
+                    {
+                        <div class="mt-3">
+                            <h6>Special Instructions:</h6>
+                            <div class="alert alert-info">
+                                <i class="fas fa-comment"></i> @Model.SpecialInstructions
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-utensils"></i> Order Items</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-end">Unit Price</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var detail in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>@detail.MenuItem.Name</td>
+                                            <td class="text-center">@detail.Quantity</td>
+                                            <td class="text-end">@detail.UnitPrice.ToString("C")</td>
+                                            <td class="text-end">@detail.Subtotal.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-dark">
+                                        <th colspan="3">Total</th>
+                                        <th class="text-end">@Model.TotalAmount.ToString("C")</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No order details available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Status Management -->
+        <div class="col-lg-4">
+            <div class="card position-sticky" style="top: 20px;">
+                <div class="card-header">
+                    <h5><i class="fas fa-cog"></i> Order Management</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Current Status</h6>
+                    <div class="mb-3">
+                        <span class="badge bg-@(GetStatusColor(Model.Status)) fs-6">@Model.Status.ToString()</span>
+                    </div>
+
+                    <h6>Update Status</h6>
+                    @using (Html.BeginForm("UpdateOrderStatus", "Admin", FormMethod.Post))
+                    {
+                        @Html.Hidden("orderId", Model.OrderID)
+                        
+                        <div class="d-grid gap-2">
+                            @if (Model.Status == RestaurantOrderSystem.Models.OrderStatus.Pending)
+                            {
+                                <button type="submit" name="status" value="1" class="btn btn-info">
+                                    <i class="fas fa-check"></i> Confirm Order
+                                </button>
+                            }
+                            
+                            @if (Model.Status == RestaurantOrderSystem.Models.OrderStatus.Confirmed)
+                            {
+                                <button type="submit" name="status" value="2" class="btn btn-primary">
+                                    <i class="fas fa-fire"></i> Start Preparing
+                                </button>
+                            }
+                            
+                            @if (Model.Status == RestaurantOrderSystem.Models.OrderStatus.Preparing)
+                            {
+                                <button type="submit" name="status" value="3" class="btn btn-success">
+                                    <i class="fas fa-bell"></i> Mark as Ready
+                                </button>
+                            }
+                            
+                            @if (Model.Status == RestaurantOrderSystem.Models.OrderStatus.Ready)
+                            {
+                                <button type="submit" name="status" value="4" class="btn btn-secondary">
+                                    <i class="fas fa-check-circle"></i> Mark as Completed
+                                </button>
+                            }
+                            
+                            @if (Model.Status != RestaurantOrderSystem.Models.OrderStatus.Cancelled && Model.Status != RestaurantOrderSystem.Models.OrderStatus.Completed)
+                            {
+                                <button type="submit" name="status" value="5" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this order?')">
+                                    <i class="fas fa-times"></i> Cancel Order
+                                </button>
+                            }
+                        </div>
+                    }
+
+                    <hr>
+                    
+                    <h6>Order Timeline</h6>
+                    <div class="timeline">
+                        <div class="timeline-item @(Model.Status >= RestaurantOrderSystem.Models.OrderStatus.Pending ? "completed" : "")">
+                            <i class="fas fa-shopping-cart"></i> Order Placed
+                        </div>
+                        <div class="timeline-item @(Model.Status >= RestaurantOrderSystem.Models.OrderStatus.Confirmed ? "completed" : "")">
+                            <i class="fas fa-check"></i> Order Confirmed
+                        </div>
+                        <div class="timeline-item @(Model.Status >= RestaurantOrderSystem.Models.OrderStatus.Preparing ? "completed" : "")">
+                            <i class="fas fa-fire"></i> Preparing
+                        </div>
+                        <div class="timeline-item @(Model.Status >= RestaurantOrderSystem.Models.OrderStatus.Ready ? "completed" : "")">
+                            <i class="fas fa-bell"></i> Ready
+                        </div>
+                        <div class="timeline-item @(Model.Status >= RestaurantOrderSystem.Models.OrderStatus.Completed ? "completed" : "")">
+                            <i class="fas fa-check-circle"></i> Completed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        @Html.ActionLink("Back to Orders", "Orders", "Admin", null, new { @class = "btn btn-outline-secondary" })
+    </div>
+</div>
+
+@functions {
+    string GetStatusColor(RestaurantOrderSystem.Models.OrderStatus status)
+    {
+        switch (status)
+        {
+            case RestaurantOrderSystem.Models.OrderStatus.Pending: return "warning";
+            case RestaurantOrderSystem.Models.OrderStatus.Confirmed: return "info";
+            case RestaurantOrderSystem.Models.OrderStatus.Preparing: return "primary";
+            case RestaurantOrderSystem.Models.OrderStatus.Ready: return "success";
+            case RestaurantOrderSystem.Models.OrderStatus.Completed: return "secondary";
+            case RestaurantOrderSystem.Models.OrderStatus.Cancelled: return "danger";
+            default: return "secondary";
+        }
+    }
+}
+
+@section Scripts {
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 10px 0;
+            padding-left: 30px;
+            border-left: 2px solid #dee2e6;
+        }
+        .timeline-item.completed {
+            border-left-color: #28a745;
+            color: #28a745;
+        }
+        .timeline-item i {
+            position: absolute;
+            left: -8px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 12px;
+            font-size: 8px;
+        }
+        .timeline-item.completed i {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+    </style>
+}

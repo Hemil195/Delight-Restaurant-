@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Veg Delight Restaurant</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            min-width: 18px;
+            text-align: center;
+        }
+        .cart-icon-container {
+            position: relative;
+            display: inline-block;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            border: none;
+            border-radius: 12px;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .price-tag {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+        .rupee-symbol {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+        }
+        .veg-badge {
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
+        }
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #28a745;
+        }
+        .featured-item {
+            border-left: 4px solid #28a745;
+            background: #f8fff9;
+        }
+        
+        /* Fix for dropdown functionality */
+        .dropdown-menu {
+            display: none;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-toggle::after {
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            @Html.ActionLink("🥗 Veg Delight Restaurant", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("🏠 Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("🍽️ Menu", "Index", "Menu", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("📋 Track Order", "Track", "Order", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ⚙️ Admin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li>@Html.ActionLink("📊 Dashboard", "Dashboard", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>@Html.ActionLink("🍛 Menu Items", "MenuItems", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("📂 Categories", "Categories", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("📋 Orders", "Orders", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        @Html.ActionLink("ℹ️ About", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("📞 Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Cart")" class="nav-link position-relative">
+                            <div class="cart-icon-container">
+                                <i class="fas fa-shopping-cart"></i>
+                                @if (ViewBag.CartItemCount != null && (int)ViewBag.CartItemCount > 0)
+                                {
+                                    <span class="cart-badge">@ViewBag.CartItemCount</span>
+                                }
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-0">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="mb-3">🥗 Veg Delight Restaurant</h5>
+                    <p class="mb-2">
+                        <span class="veg-badge">100% Vegetarian</span>
+                    </p>
+                    <p>Experience the finest vegetarian cuisine with authentic Indian flavors. Fresh ingredients, traditional recipes, and modern convenience.</p>
+                    <p class="small text-muted">All prices are in Indian Rupees (₹)</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="mb-3">🔗 Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">@Html.ActionLink("🍽️ Browse Menu", "Index", "Menu", null, new { @class = "text-light text-decoration-none" })</li>
+                        <li class="mb-2">@Html.ActionLink("📋 Track Your Order", "Track", "Order", null, new { @class = "text-light text-decoration-none" })</li>
+                        <li class="mb-2">@Html.ActionLink("ℹ️ About Us", "About", "Home", null, new { @class = "text-light text-decoration-none" })</li>
+                        <li class="mb-2">@Html.ActionLink("📞 Contact Support", "Contact", "Home", null, new { @class = "text-light text-decoration-none" })</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="mb-3">⚙️ Restaurant Management</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">@Html.ActionLink("📊 Admin Dashboard", "Dashboard", "Admin", null, new { @class = "text-light text-decoration-none" })</li>
+                        <li class="mb-2">@Html.ActionLink("🍛 Manage Menu", "MenuItems", "Admin", null, new { @class = "text-light text-decoration-none" })</li>
+                        <li class="mb-2">@Html.ActionLink("📋 Manage Orders", "Orders", "Admin", null, new { @class = "text-light text-decoration-none" })</li>
+                        <li class="mb-2">@Html.ActionLink("📂 Manage Categories", "Categories", "Admin", null, new { @class = "text-light text-decoration-none" })</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-2">
+                    <span class="me-3">🌱 100% Vegetarian</span>
+                    <span class="me-3">🚚 Online Ordering</span>
+                    <span class="me-3">📱 Mobile Friendly</span>
+                    <span>💳 Secure Payments</span>
+                </p>
+                <p class="mb-0">&copy; @DateTime.Now.Year Veg Delight Restaurant. Made with ❤️ for vegetarian food lovers.</p>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+
+        // Add rupee symbol formatting
+        $(document).ready(function() {
+            $('.price').each(function() {
+                var price = $(this).text();
+                if (price && !price.includes('₹')) {
+                    $(this).html('₹' + price);
+                }
+            });
+
+            // Initialize Bootstrap dropdowns
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+
+            // Alternative fallback for dropdown functionality
+            $('.dropdown-toggle').on('click', function(e) {
+                e.preventDefault();
+                var dropdownMenu = $(this).next('.dropdown-menu');
+                $('.dropdown-menu').not(dropdownMenu).removeClass('show');
+                dropdownMenu.toggleClass('show');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.dropdown').length) {
+                    $('.dropdown-menu').removeClass('show');
+                }
+            });
+        });
+    </script>
+    
+    @RenderSection("scripts", required: false)
+</body>
+</html>

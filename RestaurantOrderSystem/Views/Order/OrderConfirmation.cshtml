@@ -1,0 +1,123 @@
+@model RestaurantOrderSystem.Models.Order
+
+@{
+    ViewBag.Title = "Order Confirmation";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+        <h1 class="text-success">Order Confirmed!</h1>
+        <p class="lead">Thank you for your order. We're preparing your delicious meal!</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="fas fa-receipt"></i> Order #@Model.OrderID</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>Customer Information</h6>
+                            <p class="mb-1"><strong>Name:</strong> @Model.CustomerName</p>
+                            <p class="mb-1"><strong>Email:</strong> @Model.CustomerEmail</p>
+                            <p class="mb-1"><strong>Phone:</strong> @Model.CustomerPhone</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Order Details</h6>
+                            <p class="mb-1"><strong>Order Date:</strong> @Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
+                            <p class="mb-1"><strong>Status:</strong> 
+                                <span class="badge bg-warning">@Model.Status.ToString()</span>
+                            </p>
+                            <p class="mb-1"><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.SpecialInstructions))
+                    {
+                        <div class="mb-4">
+                            <h6>Special Instructions</h6>
+                            <p class="text-muted">@Model.SpecialInstructions</p>
+                        </div>
+                    }
+
+                    @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                    {
+                        <h6>Order Items</h6>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-end">Price</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var detail in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>@detail.MenuItem.Name</td>
+                                            <td class="text-center">@detail.Quantity</td>
+                                            <td class="text-end">@detail.UnitPrice.ToString("C")</td>
+                                            <td class="text-end">@detail.Subtotal.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr class="border-top">
+                                        <th colspan="3">Total</th>
+                                        <th class="text-end">@Model.TotalAmount.ToString("C")</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+
+                    <div class="alert alert-info mt-4">
+                        <h6><i class="fas fa-info-circle"></i> What's Next?</h6>
+                        <ul class="mb-0">
+                            <li>We'll send you email updates about your order status</li>
+                            <li>You can track your order using the link below</li>
+                            <li>Estimated preparation time: 15-30 minutes</li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            @Html.ActionLink("Track This Order", "Track", "Order", new { email = Model.CustomerEmail }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("Order Again", "Index", "Menu", null, new { @class = "btn btn-outline-secondary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-refresh order status every 30 seconds
+        setInterval(function() {
+            $.get('@Url.Action("GetOrderStatus", "Order")', { orderId: @Model.OrderID }, function(data) {
+                if (data.status !== 'NotFound') {
+                    $('.badge').text(data.statusText).removeClass().addClass('badge bg-' + getStatusColor(data.status));
+                }
+            });
+        }, 30000);
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Pending': return 'warning';
+                case 'Confirmed': return 'info';
+                case 'Preparing': return 'primary';
+                case 'Ready': return 'success';
+                case 'Completed': return 'secondary';
+                default: return 'warning';
+            }
+        }
+    </script>
+}

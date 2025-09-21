@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">About Restaurant Order System</h4>
+                    <p class="card-text">
+                        The Restaurant Order System is a comprehensive web-based application designed to help restaurant owners 
+                        and managers efficiently manage their menu items. Built with ASP.NET MVC and SQL Server, it provides 
+                        a robust and scalable solution for menu management.
+                    </p>
+                    
+                    <h5>Key Features:</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Menu Management:</strong> Add, edit, delete, and view menu items</li>
+                        <li class="list-group-item"><strong>Database Integration:</strong> Secure SQL Server database with automatic initialization</li>
+                        <li class="list-group-item"><strong>Responsive Design:</strong> Works on desktop, tablet, and mobile devices</li>
+                        <li class="list-group-item"><strong>User-Friendly Interface:</strong> Modern Bootstrap-based design</li>
+                        <li class="list-group-item"><strong>Data Validation:</strong> Ensures data integrity and proper formatting</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Technology Stack</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check"></i> ASP.NET MVC Framework</li>
+                        <li><i class="fas fa-check"></i> .NET Framework 4.8</li>
+                        <li><i class="fas fa-check"></i> SQL Server Database</li>
+                        <li><i class="fas fa-check"></i> Bootstrap CSS Framework</li>
+                        <li><i class="fas fa-check"></i> Entity Framework (ADO.NET)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Get Started</h5>
+                    <p class="card-text">Ready to manage your restaurant menu? Start by exploring our menu management features.</p>
+                    @Html.ActionLink("Manage Menu Items", "Index", "Menu", null, new { @class = "btn btn-primary btn-lg" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
