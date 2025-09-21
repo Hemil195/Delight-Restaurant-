@@ -641,13 +641,13 @@ namespace RestaurantOrderSystem.Data
                     // Add sample vegetarian categories
                     var categories = new[]
                     {
-                        ("Appetizers", "Fresh and delicious vegetarian starters", "/images/categories/appetizers.jpg"),
-                        ("Main Courses", "Hearty vegetarian main dishes", "/images/categories/mains.jpg"),
-                        ("Beverages", "Refreshing drinks and fresh juices", "/images/categories/beverages.jpg"),
-                        ("Desserts", "Sweet vegetarian treats", "/images/categories/desserts.jpg"),
-                        ("Salads", "Fresh and healthy salad options", "/images/categories/salads.jpg"),
-                        ("Rice & Biryanis", "Aromatic rice dishes and vegetarian biryanis", "/images/categories/rice.jpg"),
-                        ("Indian Breads", "Fresh rotis, naans and parathas", "/images/categories/breads.jpg")
+                        ("Appetizers", "Fresh and delicious vegetarian starters", "/images/categories/appetizers.png"),
+                        ("Main Courses", "Hearty vegetarian main dishes", "/images/categories/mains.png"),
+                        ("Beverages", "Refreshing drinks and fresh juices", "/images/categories/beverages.png"),
+                        ("Desserts", "Sweet vegetarian treats", "/images/categories/desserts.png"),
+                        ("Salads", "Fresh and healthy salad options", "/images/categories/salads.png"),
+                        ("Rice & Biryanis", "Aromatic rice dishes and vegetarian biryanis", "/images/categories/rice.png"),
+                        ("Indian Breads", "Fresh rotis, naans and parathas", "/images/categories/breads.png")
                     };
 
                     foreach (var (name, description, imageUrl) in categories)
@@ -669,21 +669,21 @@ namespace RestaurantOrderSystem.Data
                     // Add sample vegetarian menu items with Indian Rupee prices
                     var menuItems = new[]
                     {
-                        ("Paneer Tikka", 280.00m, "Grilled cottage cheese marinated with aromatic spices and herbs", "/images/menu/paneer-tikka.jpg", 1, true, true),
-                        ("Vegetable Biryani", 320.00m, "Fragrant basmati rice layered with mixed vegetables and traditional spices", "/images/menu/veg-biryani.jpg", 6, true, true),
-                        ("Dal Makhani", 240.00m, "Creamy black lentils slow-cooked with butter, tomatoes and aromatic spices", "/images/menu/dal-makhani.jpg", 2, true, true),
-                        ("Gulab Jamun (2 pcs)", 120.00m, "Soft milk dumplings soaked in rose-flavored sugar syrup", "/images/menu/gulab-jamun.jpg", 4, true, true),
-                        ("Fresh Lime Soda", 80.00m, "Refreshing lime juice with sparkling soda water and fresh mint", "/images/menu/lime-soda.jpg", 3, true, false),
-                        ("Vegetable Spring Rolls (4 pcs)", 180.00m, "Crispy golden spring rolls filled with fresh seasonal vegetables", "/images/menu/spring-rolls.jpg", 1, true, false),
-                        ("Palak Paneer", 260.00m, "Fresh cottage cheese cubes in creamy spinach gravy with garlic and ginger", "/images/menu/palak-paneer.jpg", 2, true, true),
-                        ("Garden Fresh Salad", 150.00m, "Mixed seasonal greens with cucumber, tomatoes and house special dressing", "/images/menu/garden-salad.jpg", 5, true, false),
-                        ("Ras Malai (2 pcs)", 140.00m, "Soft cottage cheese dumplings in sweet cardamom-flavored milk", "/images/menu/ras-malai.jpg", 4, true, false),
-                        ("Mango Lassi", 100.00m, "Traditional thick yogurt drink blended with fresh mango pulp", "/images/menu/mango-lassi.jpg", 3, true, false),
-                        ("Aloo Gobi", 220.00m, "Classic spiced potato and cauliflower curry with onions and tomatoes", "/images/menu/aloo-gobi.jpg", 2, true, false),
-                        ("Butter Naan", 60.00m, "Soft leavened bread baked in tandoor and brushed with butter", "/images/menu/butter-naan.jpg", 7, true, false),
-                        ("Jeera Rice", 160.00m, "Fragrant basmati rice tempered with cumin seeds and ghee", "/images/menu/jeera-rice.jpg", 6, true, false),
-                        ("Masala Chai", 40.00m, "Traditional Indian tea brewed with cardamom, ginger and aromatic spices", "/images/menu/masala-chai.jpg", 3, true, false),
-                        ("Rajma Masala", 230.00m, "Red kidney beans slow-cooked in rich tomato and onion gravy with Indian spices", "/images/menu/rajma.jpg", 2, true, false)
+                        ("Paneer Tikka", 280.00m, "Grilled cottage cheese marinated with aromatic spices and herbs", "/images/menu/paneer-tikka.png", 1, true, true),
+                        ("Vegetable Biryani", 320.00m, "Fragrant basmati rice layered with mixed vegetables and traditional spices", "/images/menu/veg-biryani.png", 6, true, true),
+                        ("Dal Makhani", 240.00m, "Creamy black lentils slow-cooked with butter, tomatoes and aromatic spices", "/images/menu/dal-makhani.png", 2, true, true),
+                        ("Gulab Jamun (2 pcs)", 120.00m, "Soft milk dumplings soaked in rose-flavored sugar syrup", "/images/menu/gulab-jamun.png", 4, true, true),
+                        ("Fresh Lime Soda", 80.00m, "Refreshing lime juice with sparkling soda water and fresh mint", "/images/menu/lime-soda.png", 3, true, false),
+                        ("Vegetable Spring Rolls (4 pcs)", 180.00m, "Crispy golden spring rolls filled with fresh seasonal vegetables", "/images/menu/spring-rolls.png", 1, true, false),
+                        ("Palak Paneer", 260.00m, "Fresh cottage cheese cubes in creamy spinach gravy with garlic and ginger", "/images/menu/palak-paneer.png", 2, true, true),
+                        ("Garden Fresh Salad", 150.00m, "Mixed seasonal greens with cucumber, tomatoes and house special dressing", "/images/menu/garden-salad.png", 5, true, false),
+                        ("Ras Malai (2 pcs)", 140.00m, "Soft cottage cheese dumplings in sweet cardamom-flavored milk", "/images/menu/ras-malai.png", 4, true, false),
+                        ("Mango Lassi", 100.00m, "Traditional thick yogurt drink blended with fresh mango pulp", "/images/menu/mango-lassi.png", 3, true, false),
+                        ("Aloo Gobi", 220.00m, "Classic spiced potato and cauliflower curry with onions and tomatoes", "/images/menu/aloo-gobi.png", 2, true, false),
+                        ("Butter Naan", 60.00m, "Soft leavened bread baked in tandoor and brushed with butter", "/images/menu/butter-naan.png", 7, true, false),
+                        ("Jeera Rice", 160.00m, "Fragrant basmati rice tempered with cumin seeds and ghee", "/images/menu/jeera-rice.png", 6, true, false),
+                        ("Masala Chai", 40.00m, "Traditional Indian tea brewed with cardamom, ginger and aromatic spices", "/images/menu/masala-chai.png", 3, true, false),
+                        ("Rajma Masala", 230.00m, "Red kidney beans slow-cooked in rich tomato and onion gravy with Indian spices", "/images/menu/rajma.png", 2, true, false)
                     };
 
                     foreach (var (name, price, description, imageUrl, categoryId, isAvailable, isFeatured) in menuItems)

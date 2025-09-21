@@ -157,6 +157,28 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="images\categories\appetizers.png" />
+    <Content Include="images\categories\beverages.png" />
+    <Content Include="images\categories\breads.png" />
+    <Content Include="images\categories\desserts.png" />
+    <Content Include="images\categories\mains.png" />
+    <Content Include="images\categories\rice.png" />
+    <Content Include="images\categories\salads.png" />
+    <Content Include="images\menu\aloo-gobi.png" />
+    <Content Include="images\menu\butter-naan.png" />
+    <Content Include="images\menu\dal-makhani.png" />
+    <Content Include="images\menu\garden-salad.png" />
+    <Content Include="images\menu\gulab-jamun.png" />
+    <Content Include="images\menu\jeera-rice.png" />
+    <Content Include="images\menu\lime-soda.png" />
+    <Content Include="images\menu\mango-lassi.png" />
+    <Content Include="images\menu\masala-chai.png" />
+    <Content Include="images\menu\palak-paneer.png" />
+    <Content Include="images\menu\paneer-tikka.png" />
+    <Content Include="images\menu\rajma.png" />
+    <Content Include="images\menu\ras-malai.png" />
+    <Content Include="images\menu\spring-rolls.png" />
+    <Content Include="images\menu\veg-biryani.png" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -212,7 +234,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -1,0 +1,16 @@
+<!-- Placeholder for category images -->
+<!-- This folder should contain your actual category images -->
+
+<!-- Current database expects these files: -->
+<!-- appetizers.jpg -->
+<!-- mains.jpg -->
+<!-- beverages.jpg -->
+<!-- desserts.jpg -->
+<!-- salads.jpg -->
+<!-- rice.jpg -->
+<!-- breads.jpg -->
+
+<!-- Image specifications: -->
+<!-- - Format: JPG or PNG -->
+<!-- - Recommended size: 800x600 pixels -->
+<!-- - File size: Under 500KB for better performance -->
