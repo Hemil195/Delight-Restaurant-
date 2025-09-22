@@ -15,6 +15,7 @@
                     <div class="card-body">
                         @using (Html.BeginForm("ClearCart", "Cart", FormMethod.Post))
                         {
+                            @Html.AntiForgeryToken()
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h5 class="card-title">Cart Items (@Model.Items.Count)</h5>
                                 <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to clear your cart?')">
@@ -47,6 +48,7 @@
                                 <div class="col-md-3">
                                     @using (Html.BeginForm("UpdateCart", "Cart", FormMethod.Post, new { @class = "d-flex align-items-center" }))
                                     {
+                                        @Html.AntiForgeryToken()
                                         @Html.Hidden("itemId", item.ItemID)
                                         <div class="input-group input-group-sm">
                                             <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity(@item.ItemID)">-</button>
@@ -63,8 +65,9 @@
                                 <div class="col-md-1 text-end">
                                     @using (Html.BeginForm("RemoveFromCart", "Cart", FormMethod.Post))
                                     {
+                                        @Html.AntiForgeryToken()
                                         @Html.Hidden("itemId", item.ItemID)
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Remove item">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Remove item" onclick="return confirm('Are you sure you want to remove this item?')">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     }
@@ -142,43 +145,187 @@
     </style>
     
     <script>
+        // Global variables for better cart management
+        var isUpdating = false;
+
         function increaseQuantity(itemId) {
+            if (isUpdating) return;
+            
             var quantityInput = document.getElementById('quantity_' + itemId);
             var currentValue = parseInt(quantityInput.value);
             if (currentValue < 99) {
                 quantityInput.value = currentValue + 1;
-                updateCart(itemId);
+                updateCartWithFeedback(itemId);
+            } else {
+                showMessage('Maximum quantity is 99', 'warning');
             }
         }
 
         function decreaseQuantity(itemId) {
+            if (isUpdating) return;
+            
             var quantityInput = document.getElementById('quantity_' + itemId);
             var currentValue = parseInt(quantityInput.value);
             if (currentValue > 1) {
                 quantityInput.value = currentValue - 1;
-                updateCart(itemId);
+                updateCartWithFeedback(itemId);
+            } else {
+                // If quantity becomes 0, ask for confirmation to remove
+                if (confirm('Remove this item from cart?')) {
+                    removeItemFromCart(itemId);
+                }
             }
         }
 
         function updateCart(itemId) {
+            if (isUpdating) return;
+            updateCartWithFeedback(itemId);
+        }
+
+        function updateCartWithFeedback(itemId) {
+            if (isUpdating) return;
+            
             var quantityInput = document.getElementById('quantity_' + itemId);
+            var quantity = parseInt(quantityInput.value);
+            
+            // Validate quantity
+            if (quantity < 1) {
+                quantityInput.value = 1;
+                return;
+            }
+            if (quantity > 99) {
+                quantityInput.value = 99;
+                showMessage('Maximum quantity is 99', 'warning');
+                return;
+            }
+            
+            // Show loading state
+            isUpdating = true;
             var form = quantityInput.closest('form');
+            var submitButton = form.querySelector('button[type="submit"]');
+            
+            // Add loading state to quantity controls
+            var quantityControls = form.querySelectorAll('button, input');
+            quantityControls.forEach(function(control) {
+                control.disabled = true;
+            });
+            
+            // Submit the form
             form.submit();
+        }
+
+        function removeItemFromCart(itemId) {
+            if (isUpdating) return;
+            
+            if (confirm('Are you sure you want to remove this item from cart?')) {
+                isUpdating = true;
+                var removeForm = document.querySelector('form[action*="RemoveFromCart"] input[value="' + itemId + '"]').closest('form');
+                removeForm.submit();
+            }
+        }
+
+        function showMessage(message, type) {
+            // Create a temporary alert
+            var alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-' + (type || 'info') + ' alert-dismissible fade show';
+            alertDiv.innerHTML = '<i class="fas fa-info-circle"></i> ' + message + 
+                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+            
+            // Insert at the top of the container
+            var container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(function() {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 3000);
+        }
+
+        // Real-time cart total updates (if you want AJAX functionality)
+        function updateCartTotalsAjax() {
+            $.ajax({
+                url: '@Url.Action("GetCartTotal", "Cart")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        // Update cart totals in the UI
+                        $('.cart-total').text(response.formattedTotal);
+                        $('.cart-count').text(response.itemCount);
+                        
+                        // Update cart badge in navigation
+                        var cartBadge = $('.cart-badge');
+                        if (response.itemCount > 0) {
+                            cartBadge.text(response.itemCount).show();
+                        } else {
+                            cartBadge.hide();
+                        }
+                    }
+                },
+                error: function() {
+                    console.log('Failed to update cart totals');
+                }
+            });
         }
         
         $(document).ready(function() {
             // Convert HTML entities to actual rupee symbols
             $('.rupee-symbol').each(function() {
-                if ($(this).text() === '&#8377;') {
-                    $(this).html('?');
+                var $this = $(this);
+                if ($this.html() === '&#8377;' || $this.text() === '&#8377;') {
+                    $this.html('?');
                 }
             });
             
             // Fallback: if still showing question marks, replace with Rs.
             $('.price-display').each(function() {
-                var text = $(this).text();
+                var $this = $(this);
+                var text = $this.text();
                 if (text.includes('?')) {
-                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                    var newText = text.replace(/\?/g, 'Rs. ');
+                    $this.html(newText);
+                }
+            });
+
+            // Add loading states to forms
+            $('form').on('submit', function() {
+                var $form = $(this);
+                var $submitBtn = $form.find('button[type="submit"]');
+                
+                // Disable submit button and show loading
+                $submitBtn.prop('disabled', true);
+                var originalText = $submitBtn.html();
+                $submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+                
+                // Re-enable after a delay (in case of errors)
+                setTimeout(function() {
+                    $submitBtn.prop('disabled', false).html(originalText);
+                    isUpdating = false;
+                }, 3000);
+            });
+
+            // Enhanced quantity input validation
+            $('input[type="number"]').on('input', function() {
+                var $input = $(this);
+                var value = parseInt($input.val());
+                var min = parseInt($input.attr('min')) || 1;
+                var max = parseInt($input.attr('max')) || 99;
+                
+                if (value < min) {
+                    $input.val(min);
+                } else if (value > max) {
+                    $input.val(max);
+                    showMessage('Maximum quantity is ' + max, 'warning');
+                }
+            });
+
+            // Keyboard shortcuts
+            $(document).on('keydown', function(e) {
+                // ESC key to clear any loading states
+                if (e.key === 'Escape') {
+                    isUpdating = false;
+                    $('button').prop('disabled', false);
                 }
             });
         });
