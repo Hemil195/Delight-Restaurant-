@@ -3,169 +3,234 @@
     ViewBag.Title = "Welcome to Veg Delight Restaurant";
 }
 
-<!-- Hero Section -->
+<!-- Enhanced Hero Section -->
 <section class="hero-section">
-    <div class="container text-center">
+    <div class="hero-overlay"></div>
+    <div class="container text-center position-relative">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h1 class="display-4 fw-bold mb-3">🥗 Welcome to Veg Delight Restaurant</h1>
-                <div class="mb-4">
-                    <span class="veg-hero-badge">🌱 100% Pure Vegetarian</span>
+                <div class="hero-content animate-on-scroll">
+                    <h1 class="display-3 fw-bold mb-3 text-glow">🥗 Veg Delight Restaurant</h1>
+                    <div class="mb-4">
+                        <span class="veg-hero-badge pulse-animation">🌱 100% Pure Vegetarian</span>
+                    </div>
+                    <p class="lead mb-4 hero-subtitle">Experience authentic Indian vegetarian cuisine made with the freshest ingredients and traditional recipes. Savor the taste of home with our delicious, healthy, and nutritious vegetarian dishes!</p>
+                    <div class="hero-buttons">
+                        @Html.ActionLink("🍽️ Explore Menu", "Index", "Menu", null, new { @class = "btn btn-hero-primary btn-lg me-3 mb-2" })
+                        @Html.ActionLink("📋 Track Order", "Track", "Order", null, new { @class = "btn btn-hero-secondary btn-lg mb-2" })
+                    </div>
+                    <div class="hero-features mt-4">
+                        <div class="row justify-content-center">
+                            <div class="col-auto">
+                                <div class="feature-mini">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    <span>Free Delivery</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="feature-mini">
+                                    <i class="fas fa-clock"></i>
+                                    <span>30 Min Delivery</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="feature-mini">
+                                    <i class="fas fa-award"></i>
+                                    <span>Premium Quality</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="lead mb-4">Experience authentic Indian vegetarian cuisine made with the freshest ingredients and traditional recipes. Order online for home delivery or takeaway!</p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                    @Html.ActionLink("🍽️ Browse Our Menu", "Index", "Menu", null, new { @class = "btn btn-light btn-lg me-md-2" })
-                    @Html.ActionLink("📋 Track Your Order", "Track", "Order", null, new { @class = "btn btn-outline-light btn-lg" })
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll-indicator">
+        <div class="scroll-arrow">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Live Stats Dashboard positioned right after hero section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card bg-gradient-success">
+                    <div class="stat-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="@Model.TotalMenuItems">0</h3>
+                        <p class="stat-label">Delicious Vegetarian Items</p>
+                    </div>
+                    <div class="stat-decoration">🥬</div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card bg-gradient-warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="@Model.TotalOrders">0</h3>
+                        <p class="stat-label">Happy Customers Served</p>
+                    </div>
+                    <div class="stat-decoration">😊</div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card bg-gradient-info">
+                    <div class="stat-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" data-target="@Model.Categories.Count">0</h3>
+                        <p class="stat-label">Cuisine Categories</p>
+                    </div>
+                    <div class="stat-decoration">🍛</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="container">
-    <!-- Quick Stats -->
-    <div class="row mb-5">
-        <div class="col-md-4 mb-4">
-            <div class="card bg-success text-white h-100 stats-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-leaf fa-3x mb-3"></i>
-                    <h3>@Model.TotalMenuItems</h3>
-                    <p class="card-text">Delicious Vegetarian Items</p>
-                </div>
-            </div>
+<div class="container main-content">
+    <!-- Why Choose Us Section -->
+    <section class="features-section mb-5">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">🌟 Why Food Lovers Choose Us</h2>
+            <p class="section-subtitle">Discover what makes Veg Delight special</p>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card bg-warning text-dark h-100 stats-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-heart fa-3x mb-3"></i>
-                    <h3>@Model.TotalOrders</h3>
-                    <p class="card-text">Happy Customers Served</p>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">🌱</div>
+                    </div>
+                    <h5 class="feature-title">100% Pure Vegetarian</h5>
+                    <p class="feature-description">Dedicated vegetarian kitchen ensuring authentic plant-based cuisine</p>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card bg-info text-white h-100 stats-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-utensils fa-3x mb-3"></i>
-                    <h3>@Model.Categories.Count</h3>
-                    <p class="card-text">Cuisine Categories</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">🥘</div>
+                    </div>
+                    <h5 class="feature-title">Authentic Flavors</h5>
+                    <p class="feature-description">Traditional recipes with modern cooking techniques for perfect taste</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Why Choose Us -->
-    <section class="mb-5">
-        <div class="row">
-            <div class="col-md-12 text-center mb-4">
-                <h2 class="fw-bold text-success">🌟 Why Choose Veg Delight?</h2>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="text-center feature-card">
-                    <div class="feature-icon mb-3">🌱</div>
-                    <h5>100% Vegetarian</h5>
-                    <p class="text-muted">Pure vegetarian kitchen with no compromise on taste</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">🚚</div>
+                    </div>
+                    <h5 class="feature-title">Lightning Fast Delivery</h5>
+                    <p class="feature-description">Hot & fresh food delivered in 30 minutes or less to your doorstep</p>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="text-center feature-card">
-                    <div class="feature-icon mb-3">🥘</div>
-                    <h5>Authentic Flavors</h5>
-                    <p class="text-muted">Traditional Indian recipes passed down through generations</p>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="text-center feature-card">
-                    <div class="feature-icon mb-3">🚚</div>
-                    <h5>Quick Delivery</h5>
-                    <p class="text-muted">Hot and fresh food delivered to your doorstep</p>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="text-center feature-card">
-                    <div class="feature-icon mb-3">💰</div>
-                    <h5>Best Prices</h5>
-                    <p class="text-muted">Affordable rates without compromising quality</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">💰</div>
+                    </div>
+                    <h5 class="feature-title">Best Value</h5>
+                    <p class="feature-description">Premium quality at affordable prices with regular special offers</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Items -->
+    <!-- Chef's Special Section -->
     @if (Model.FeaturedItems != null && Model.FeaturedItems.Any())
     {
-        <section class="mb-5">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold text-primary">⭐ Chef's Special Recommendations</h2>
-                <p class="text-muted">Try our most popular vegetarian dishes</p>
+        <section class="featured-section mb-5">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">⭐ Chef's Special Recommendations</h2>
+                <p class="section-subtitle">Our most loved vegetarian masterpieces</p>
             </div>
-            <div class="row">
+            <div class="row g-4">
                 @foreach (var item in Model.FeaturedItems.Take(3))
                 {
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 featured-item-card">
-                            <div class="position-relative">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="food-card">
+                            <div class="food-image-wrapper">
                                 @if (!string.IsNullOrEmpty(item.ImageUrl))
                                 {
-                                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 200px; object-fit: cover;" 
-                                         onerror="this.src='/images/menu/default-veg.jpg'">
+                                    <img src="@item.ImageUrl" class="food-image" alt="@item.Name" 
+                                         onerror="this.src='/Content/images/menu/default-veg.jpg'">
                                 }
                                 else
                                 {
-                                    <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" style="height: 200px; background: linear-gradient(45deg, #28a745, #20c997);">
-                                        <i class="fas fa-leaf fa-3x text-white"></i>
+                                    <div class="food-image-placeholder">
+                                        <i class="fas fa-leaf fa-3x"></i>
                                     </div>
                                 }
-                                <div class="position-absolute top-0 end-0 m-2">
-                                    <span class="badge bg-success">🌱 Veg</span>
+                                <div class="food-badges">
+                                    <span class="veg-badge">🌱 Veg</span>
+                                    <span class="featured-badge">⭐ Featured</span>
+                                </div>
+                                <div class="food-overlay">
+                                    <div class="food-overlay-content">
+                                        @Html.ActionLink("Quick View", "Details", "Menu", new { id = item.ItemID }, new { @class = "btn btn-overlay" })
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title text-success">@item.Name</h5>
-                                <p class="card-text flex-grow-1">@(item.Description ?? "Delicious vegetarian dish made with fresh ingredients and authentic spices.")</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 price-tag mb-0">₹@item.Price.ToString("N0")</span>
-                                    @Html.ActionLink("Order Now", "Details", "Menu", new { id = item.ItemID }, new { @class = "btn btn-success btn-sm" })
+                            <div class="food-content">
+                                <h5 class="food-title">@item.Name</h5>
+                                <p class="food-description">@(item.Description ?? "Delicious vegetarian dish made with fresh ingredients and authentic spices.")</p>
+                                <div class="food-footer">
+                                    <div class="food-price">
+                                        <span class="currency">₹</span>
+                                        <span class="amount">@item.Price.ToString("N0")</span>
+                                    </div>
+                                    @Html.ActionLink("Order Now", "Details", "Menu", new { id = item.ItemID }, new { @class = "btn btn-order" })
                                 </div>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-            <div class="text-center">
-                @Html.ActionLink("🍽️ View Full Menu", "Index", "Menu", null, new { @class = "btn btn-success btn-lg" })
+            <div class="text-center mt-4">
+                @Html.ActionLink("🍽️ Explore Full Menu", "Index", "Menu", null, new { @class = "btn btn-primary btn-lg shadow" })
             </div>
         </section>
     }
 
-    <!-- Categories Section -->
+    <!-- Categories Showcase -->
     @if (Model.Categories != null && Model.Categories.Any())
     {
-        <section class="mb-5">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold text-primary">🍛 Browse by Category</h2>
-                <p class="text-muted">Explore our diverse range of vegetarian culinary offerings</p>
+        <section class="categories-section mb-5">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">🍛 Browse Our Categories</h2>
+                <p class="section-subtitle">Explore our diverse range of vegetarian delights</p>
             </div>
-            <div class="row">
+            <div class="row g-4">
                 @foreach (var category in Model.Categories.Take(6))
                 {
-                    <div class="col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100 border-0 shadow-sm category-card">
-                            @if (!string.IsNullOrEmpty(category.ImageUrl))
-                            {
-                                <img src="@category.ImageUrl" class="card-img-top" alt="@category.Name" style="height: 150px; object-fit: cover;"
-                                     onerror="this.src='/images/categories/default-category.jpg'">
-                            }
-                            else
-                            {
-                                <div class="card-img-top bg-gradient text-white d-flex align-items-center justify-content-center" style="height: 150px; background: linear-gradient(45deg, #28a745, #20c997);">
-                                    <i class="fas fa-utensils fa-2x"></i>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="category-card">
+                            <div class="category-image-wrapper">
+                                @if (!string.IsNullOrEmpty(category.ImageUrl))
+                                {
+                                    <img src="@category.ImageUrl" class="category-image" alt="@category.Name"
+                                         onerror="this.src='/Content/images/categories/default-category.jpg'">
+                                }
+                                else
+                                {
+                                    <div class="category-image-placeholder">
+                                        <i class="fas fa-utensils fa-2x"></i>
+                                    </div>
+                                }
+                                <div class="category-overlay">
+                                    <div class="category-overlay-content">
+                                        <h6 class="category-title">@category.Name</h6>
+                                        <p class="category-description">@(category.Description ?? "Fresh vegetarian options")</p>
+                                        @Html.ActionLink("Browse Items", "Index", "Menu", new { categoryId = category.CategoryID }, new { @class = "btn btn-category" })
+                                    </div>
                                 </div>
-                            }
-                            <div class="card-body text-center">
-                                <h6 class="card-title text-success">@category.Name</h6>
-                                <p class="card-text small text-muted">@(category.Description ?? "Fresh vegetarian options")</p>
-                                @Html.ActionLink("Browse Items", "Index", "Menu", new { categoryId = category.CategoryID }, new { @class = "btn btn-sm btn-outline-success" })
                             </div>
                         </div>
                     </div>
@@ -175,27 +240,38 @@
     }
 
     <!-- Special Offers -->
-    <section class="mb-5">
-        <div class="card bg-gradient text-white special-offers-card">
-            <div class="card-body text-center py-5">
-                <h2 class="fw-bold mb-3">🎉 Special Offers</h2>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <div class="offer-item">
-                            <h4>🚚 Free Delivery</h4>
-                            <p>On orders above ₹500</p>
-                        </div>
+    <section class="offers-section mb-5">
+        <div class="offers-card">
+            <div class="offers-background"></div>
+            <div class="offers-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2 class="offers-title">🎉 Amazing Offers Just for You!</h2>
+                        <p class="offers-subtitle">Don't miss out on these incredible deals</p>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="offer-item">
-                            <h4>⏰ Quick Service</h4>
-                            <p>Ready in 30 minutes or less</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="offer-item">
-                            <h4>💯 Fresh Guarantee</h4>
-                            <p>Made fresh for every order</p>
+                    <div class="col-lg-6">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="offer-item">
+                                    <div class="offer-icon">🚚</div>
+                                    <h6>Free Delivery</h6>
+                                    <p>On orders above ₹500</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="offer-item">
+                                    <div class="offer-icon">⏰</div>
+                                    <h6>30 Min Guarantee</h6>
+                                    <p>Or it's free!</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="offer-item">
+                                    <div class="offer-icon">💯</div>
+                                    <h6>Fresh Guarantee</h6>
+                                    <p>Made fresh daily</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,17 +280,19 @@
     </section>
 
     <!-- Call to Action -->
-    <section class="bg-light py-5 rounded mb-5">
-        <div class="container text-center">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="fw-bold mb-3 text-success">🍽️ Ready to Order Delicious Vegetarian Food?</h2>
-                    <p class="lead mb-4">Browse our complete menu of authentic vegetarian dishes and place your order for quick delivery or pickup</p>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                        @Html.ActionLink("🛒 Order Now", "Index", "Menu", null, new { @class = "btn btn-success btn-lg me-md-2" })
-                        @Html.ActionLink("📞 Contact Us", "Contact", "Home", null, new { @class = "btn btn-outline-success btn-lg" })
-                    </div>
-                </div>
+    <section class="cta-section">
+        <div class="cta-content text-center">
+            <h2 class="cta-title">🍽️ Ready to Experience Pure Vegetarian Bliss?</h2>
+            <p class="cta-subtitle">Join thousands of satisfied customers who trust us for authentic vegetarian cuisine</p>
+            <div class="cta-buttons">
+                @Html.ActionLink("🛒 Order Now", "Index", "Menu", null, new { @class = "btn btn-cta-primary btn-lg me-3" })
+                @Html.ActionLink("📞 Contact Us", "Contact", "Home", null, new { @class = "btn btn-cta-secondary btn-lg" })
+            </div>
+            <div class="cta-features mt-4">
+                <span class="cta-feature">✓ 100% Vegetarian</span>
+                <span class="cta-feature">✓ Quick Delivery</span>
+                <span class="cta-feature">✓ Fresh Ingredients</span>
+                <span class="cta-feature">✓ Authentic Taste</span>
             </div>
         </div>
     </section>
@@ -222,62 +300,729 @@
 
 @section Scripts {
     <style>
+        /* Enhanced Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            position: relative;
+            background: linear-gradient(135deg, #2d5016 0%, #3e8e41 50%, #28a745 100%);
             color: white;
-            padding: 80px 0;
+            padding: 100px 0 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
         }
+
+        .hero-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
         .veg-hero-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 1.1rem;
+            background: rgba(255,255,255,0.25);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
             font-weight: bold;
             display: inline-block;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.3);
         }
-        .stats-card {
-            transition: transform 0.3s ease;
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
         }
-        .stats-card:hover {
-            transform: translateY(-5px);
+
+        @@keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-        .feature-card {
-            padding: 20px;
-            transition: transform 0.3s ease;
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: rgba(255,255,255,0.95);
         }
-        .feature-card:hover {
+
+        .btn-hero-primary {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            padding: 15px 35px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255,107,53,0.3);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255,107,53,0.4);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 15px 35px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-hero-secondary:hover {
+            background: white;
+            color: #28a745;
             transform: translateY(-3px);
         }
+
+        .feature-mini {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 15px;
+            border-radius: 25px;
+            margin: 0 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-mini i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-arrow {
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        @@keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Stats Section - Positioned right after hero */
+        .stats-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 0;
+            position: relative;
+            z-index: 1;
+            padding-top: 80px;
+        }
+
+        /* Enhanced Stats Cards */
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+            height: 100%;
+            transform: translateY(0);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            color: white;
+        }
+
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14) !important;
+            color: white;
+        }
+
+        .bg-gradient-info {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1) !important;
+            color: white;
+        }
+
+        .stat-icon {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .stat-decoration {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 3.5rem;
+            opacity: 0.2;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #636e72;
+            margin-bottom: 0;
+        }
+
+        /* Enhanced Feature Cards */
+        .feature-card {
+            background: white;
+            padding: 40px 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #f1f3f4;
+            height: 100%;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon-wrapper {
+            margin-bottom: 20px;
+        }
+
         .feature-icon {
-            font-size: 3rem;
+            font-size: 4rem;
+            line-height: 1;
+            display: block;
         }
-        .featured-item-card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
-            border-left: 4px solid #28a745;
+
+        .feature-title {
+            color: #2d3436;
+            font-weight: 600;
+            margin-bottom: 15px;
         }
-        .featured-item-card:hover {
+
+        .feature-description {
+            color: #636e72;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Enhanced Food Cards */
+        .food-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #f1f3f4;
+        }
+
+        .food-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
+
+        .food-image-wrapper {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .food-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .food-card:hover .food-image {
+            transform: scale(1.1);
+        }
+
+        .food-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .food-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+
+        .veg-badge, .featured-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .veg-badge {
+            background: #28a745;
+            color: white;
+        }
+
+        .featured-badge {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .food-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .food-card:hover .food-overlay {
+            opacity: 1;
+        }
+
+        .btn-overlay {
+            background: white;
+            color: #28a745;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .food-content {
+            padding: 25px;
+        }
+
+        .food-title {
+            color: #2d3436;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .food-description {
+            color: #636e72;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .food-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .food-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        .btn-order {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-order:hover {
+            background: #20c997;
+            transform: scale(1.05);
+        }
+
+        /* Category Cards */
+        .category-card {
+            position: relative;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
         .category-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
-        .price-tag {
+
+        .category-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .category-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .category-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(40,167,69,0.8), rgba(32,201,151,0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .btn-category {
+            background: white;
             color: #28a745;
-            font-weight: bold;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Offers Section */
+        .offers-card {
+            position: relative;
+            background: linear-gradient(135deg, #fd7e14, #e63946);
+            border-radius: 20px;
+            padding: 60px 40px;
+            color: white;
+            overflow: hidden;
+        }
+
+        .offers-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .offers-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .offers-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .offers-subtitle {
             font-size: 1.2rem;
+            margin-bottom: 0;
+            opacity: 0.9;
         }
-        .special-offers-card {
-            background: linear-gradient(135deg, #fd7e14 0%, #e63946 100%);
-        }
+
         .offer-item {
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin: 10px;
-            backdrop-filter: blur(5px);
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .offer-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: #636e72;
+            margin-bottom: 40px;
+        }
+
+        .btn-cta-primary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            padding: 15px 40px;
+            font-weight: 600;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(40,167,69,0.3);
+        }
+
+        .btn-cta-secondary {
+            background: transparent;
+            border: 2px solid #28a745;
+            color: #28a745;
+            padding: 15px 40px;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta-secondary:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        .cta-features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .cta-feature {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        .animate-on-scroll {
+            animation: slideInUp 1s ease-out;
+        }
+
+        @@keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .hero-section {
+                padding: 80px 0 60px;
+                min-height: 80vh;
+            }
+
+            .stats-section {
+                padding: 60px 0;
+            }
+
+            .stat-card {
+                padding: 30px 20px;
+                margin-bottom: 20px;
+            }
+
+            .stat-number {
+                font-size: 2.8rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .offers-title, .cta-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .cta-features {
+                gap: 15px;
+            }
+
+            .cta-feature {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding-top: 60px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .stats-section {
+                padding: 40px 0;
+            }
+
+            .stat-card {
+                padding: 25px 15px;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .stat-label {
+                font-size: 1rem;
+            }
         }
     </style>
+ 
+    <script>
+        // Animated counter for stats
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stat-number[data-target]');
+            
+            const animateCounter = (counter) => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    counter.textContent = Math.floor(current);
+                    
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, 20);
+            };
+            
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            
+            counters.forEach(counter => observer.observe(counter));
+            
+            // Smooth scrolling for hero scroll indicator
+            document.querySelector('.hero-scroll-indicator')?.addEventListener('click', () => {
+                document.querySelector('.stats-section').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 }

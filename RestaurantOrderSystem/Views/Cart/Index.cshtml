@@ -40,7 +40,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="mb-1">@item.Name</h6>
-                                    <small class="text-muted">@item.Price.ToString("C") each</small>
+                                    <small class="text-muted price-display">
+                                        <span class="rupee-symbol">&#8377;</span>@item.Price.ToString("N0") each
+                                    </small>
                                 </div>
                                 <div class="col-md-3">
                                     @using (Html.BeginForm("UpdateCart", "Cart", FormMethod.Post, new { @class = "d-flex align-items-center" }))
@@ -54,7 +56,9 @@
                                     }
                                 </div>
                                 <div class="col-md-2 text-end">
-                                    <strong>@item.Subtotal.ToString("C")</strong>
+                                    <strong class="price-display">
+                                        <span class="rupee-symbol">&#8377;</span>@item.Subtotal.ToString("N0")
+                                    </strong>
                                 </div>
                                 <div class="col-md-1 text-end">
                                     @using (Html.BeginForm("RemoveFromCart", "Cart", FormMethod.Post))
@@ -79,16 +83,22 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal:</span>
-                            <strong>@Model.GetTotal().ToString("C")</strong>
+                            <strong class="price-display">
+                                <span class="rupee-symbol">&#8377;</span>@Model.GetTotal().ToString("N0")
+                            </strong>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Tax (8%):</span>
-                            <span>@((Model.GetTotal() * 0.08m).ToString("C"))</span>
+                            <span class="price-display">
+                                <span class="rupee-symbol">&#8377;</span>@((Model.GetTotal() * 0.08m).ToString("N0"))
+                            </span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between mb-3">
                             <strong>Total:</strong>
-                            <strong class="text-primary">@((Model.GetTotal() * 1.08m).ToString("C"))</strong>
+                            <strong class="text-primary price-display">
+                                <span class="rupee-symbol">&#8377;</span>@((Model.GetTotal() * 1.08m).ToString("N0"))
+                            </strong>
                         </div>
                         
                         <div class="d-grid gap-2">
@@ -121,6 +131,16 @@
 </div>
 
 @section Scripts {
+    <style>
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
+    </style>
+    
     <script>
         function increaseQuantity(itemId) {
             var quantityInput = document.getElementById('quantity_' + itemId);
@@ -145,5 +165,22 @@
             var form = quantityInput.closest('form');
             form.submit();
         }
+        
+        $(document).ready(function() {
+            // Convert HTML entities to actual rupee symbols
+            $('.rupee-symbol').each(function() {
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
+        });
     </script>
 }

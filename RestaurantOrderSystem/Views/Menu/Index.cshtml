@@ -107,7 +107,9 @@
                             
                             <div class="mt-auto">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 text-primary mb-0">@item.Price.ToString("C")</span>
+                                    <span class="h5 text-primary mb-0 price-display">
+                                        <span class="rupee-symbol">&#8377;</span>@item.Price.ToString("N0")
+                                    </span>
                                     @if (item.Category != null)
                                     {
                                         <small class="text-muted">@item.Category.Name</small>
@@ -182,5 +184,32 @@
         .list-group-item:last-child {
             border-bottom: none;
         }
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
     </style>
+    
+    <script>
+        $(document).ready(function() {
+            // Alternative rupee symbol display methods
+            $('.rupee-symbol').each(function() {
+                // If the HTML entity doesn't work, try direct Unicode
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
+        });
+    </script>
 }

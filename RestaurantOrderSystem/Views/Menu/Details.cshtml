@@ -35,7 +35,9 @@
             <h1 class="display-5">@Model.Name</h1>
             
             <div class="mb-4">
-                <span class="display-6 text-primary fw-bold">@Model.Price.ToString("C")</span>
+                <span class="display-6 text-primary fw-bold price-display">
+                    <span class="rupee-symbol">&#8377;</span>@Model.Price.ToString("N0")
+                </span>
             </div>
             
             @if (!string.IsNullOrEmpty(Model.Description))
@@ -93,6 +95,16 @@
 </div>
 
 @section Scripts {
+    <style>
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
+    </style>
+    
     <script>
         function increaseQuantity() {
             var quantityInput = document.getElementById('quantity');
@@ -109,5 +121,23 @@
                 quantityInput.value = currentValue - 1;
             }
         }
+        
+        $(document).ready(function() {
+            // Alternative rupee symbol display methods
+            $('.rupee-symbol').each(function() {
+                // If the HTML entity doesn't work, try direct Unicode
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
+        });
     </script>
 }

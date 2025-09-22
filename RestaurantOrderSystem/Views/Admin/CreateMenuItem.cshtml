@@ -29,7 +29,7 @@
                             <div class="col-md-6 mb-3">
                                 @Html.LabelFor(model => model.Price, new { @class = "form-label" })
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text rupee-symbol">&#8377;</span>
                                     @Html.TextBoxFor(model => model.Price, new { @class = "form-control", @type = "number", @step = "0.01", @min = "0.01", required = "required" })
                                 </div>
                                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "invalid-feedback" })
@@ -87,7 +87,9 @@
                                 <h6 class="card-title">Item Name</h6>
                                 <p class="card-text text-muted small">Item description will appear here...</p>
                                 <div class="d-flex justify-content-between">
-                                    <span class="h6 text-primary">$0.00</span>
+                                    <span class="h6 text-primary price-display">
+                                        <span class="rupee-symbol">&#8377;</span>0.00
+                                    </span>
                                     <small class="text-muted">Category</small>
                                 </div>
                             </div>
@@ -115,6 +117,16 @@
 </div>
 
 @section Scripts {
+    <style>
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
+    </style>
+    
     <script>
         // Bootstrap validation
         (function() {
@@ -144,12 +156,30 @@
         
         $('#Price').on('input', function() {
             var price = $(this).val();
-            $('.h6.text-primary').text(price ? '$' + parseFloat(price).toFixed(2) : '$0.00');
+            $('.price-display .rupee-symbol').siblings().remove();
+            $('.price-display .rupee-symbol').after(price ? parseFloat(price).toFixed(2) : '0.00');
         });
         
         $('#CategoryID').on('change', function() {
             var categoryText = $(this).find('option:selected').text();
             $('.text-muted:last').text(categoryText !== 'Select a category' ? categoryText : 'Category');
+        });
+        
+        $(document).ready(function() {
+            // Convert HTML entities to actual rupee symbols
+            $('.rupee-symbol').each(function() {
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
         });
     </script>
 }

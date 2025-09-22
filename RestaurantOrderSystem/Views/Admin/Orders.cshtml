@@ -49,7 +49,9 @@
                                             @order.CustomerPhone
                                         </small>
                                     </td>
-                                    <td><strong>@order.TotalAmount.ToString("C")</strong></td>
+                                    <td class="price-display">
+                                        <strong><span class="rupee-symbol">&#8377;</span>@order.TotalAmount.ToString("N0")</strong>
+                                    </td>
                                     <td>
                                         <span class="badge bg-@(GetStatusColor(order.Status))">
                                             @order.Status.ToString()
@@ -113,4 +115,35 @@
             default: return "";
         }
     }
+}
+
+@section Scripts {
+    <style>
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
+    </style>
+    
+    <script>
+        $(document).ready(function() {
+            // Convert HTML entities to actual rupee symbols
+            $('.rupee-symbol').each(function() {
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
+        });
+    </script>
 }

@@ -65,24 +65,34 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
                                 <h6 class="mb-0">@item.Name</h6>
-                                <small class="text-muted">@item.Quantity x @item.Price.ToString("C")</small>
+                                <small class="text-muted price-display">
+                                    @item.Quantity x <span class="rupee-symbol">&#8377;</span>@item.Price.ToString("N0")
+                                </small>
                             </div>
-                            <span>@item.Subtotal.ToString("C")</span>
+                            <span class="price-display">
+                                <span class="rupee-symbol">&#8377;</span>@item.Subtotal.ToString("N0")
+                            </span>
                         </div>
                     }
                     <hr>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal (@Model.Cart.GetItemCount() items)</span>
-                        <span>@Model.Cart.GetTotal().ToString("C")</span>
+                        <span class="price-display">
+                            <span class="rupee-symbol">&#8377;</span>@Model.Cart.GetTotal().ToString("N0")
+                        </span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Tax (8%)</span>
-                        <span>@((Model.Cart.GetTotal() * 0.08m).ToString("C"))</span>
+                        <span class="price-display">
+                            <span class="rupee-symbol">&#8377;</span>@((Model.Cart.GetTotal() * 0.08m).ToString("N0"))
+                        </span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
                         <strong>Total</strong>
-                        <strong>@((Model.Cart.GetTotal() * 1.08m).ToString("C"))</strong>
+                        <strong class="price-display">
+                            <span class="rupee-symbol">&#8377;</span>@((Model.Cart.GetTotal() * 1.08m).ToString("N0"))
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -91,6 +101,16 @@
 </div>
 
 @section Scripts {
+    <style>
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
+    </style>
+    
     <script>
         // Bootstrap validation
         (function() {
@@ -108,5 +128,22 @@
                 });
             }, false);
         })();
+        
+        $(document).ready(function() {
+            // Convert HTML entities to actual rupee symbols
+            $('.rupee-symbol').each(function() {
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
+        });
     </script>
 }

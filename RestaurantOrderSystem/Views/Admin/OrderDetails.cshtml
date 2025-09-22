@@ -29,7 +29,9 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>Order Date:</strong> @Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
-                            <p><strong>Total Amount:</strong> @Model.TotalAmount.ToString("C")</p>
+                            <p class="price-display">
+                                <strong>Total Amount:</strong> <span class="rupee-symbol">&#8377;</span>@Model.TotalAmount.ToString("N0")
+                            </p>
                         </div>
                     </div>
                     
@@ -69,15 +71,21 @@
                                         <tr>
                                             <td>@detail.MenuItem.Name</td>
                                             <td class="text-center">@detail.Quantity</td>
-                                            <td class="text-end">@detail.UnitPrice.ToString("C")</td>
-                                            <td class="text-end">@detail.Subtotal.ToString("C")</td>
+                                            <td class="text-end price-display">
+                                                <span class="rupee-symbol">&#8377;</span>@detail.UnitPrice.ToString("N0")
+                                            </td>
+                                            <td class="text-end price-display">
+                                                <span class="rupee-symbol">&#8377;</span>@detail.Subtotal.ToString("N0")
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
                                 <tfoot>
                                     <tr class="table-dark">
                                         <th colspan="3">Total</th>
-                                        <th class="text-end">@Model.TotalAmount.ToString("C")</th>
+                                        <th class="text-end price-display">
+                                            <span class="rupee-symbol">&#8377;</span>@Model.TotalAmount.ToString("N0")
+                                        </th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -225,5 +233,31 @@
             background: #28a745;
             color: white;
         }
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
     </style>
+    
+    <script>
+        $(document).ready(function() {
+            // Convert HTML entities to actual rupee symbols
+            $('.rupee-symbol').each(function() {
+                if ($(this).text() === '&#8377;') {
+                    $(this).html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var text = $(this).text();
+                if (text.includes('?')) {
+                    $(this).html(text.replace('?', '<strong>Rs.</strong> '));
+                }
+            });
+        });
+    </script>
 }
