@@ -14,15 +14,28 @@
                     <h5>Enter Your Email</h5>
                 </div>
                 <div class="card-body">
-                    @using (Html.BeginForm("Track", "Order", FormMethod.Post))
+                    @using (Html.BeginForm("Track", "Order", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
                     {
-                        <div class="mb-3">
-                            @Html.Label("CustomerEmail", "Email Address", new { @class = "form-label" })
-                            @Html.TextBox("CustomerEmail", Model?.CustomerEmail, new { @class = "form-control", @type = "email", @placeholder = "Enter your email address", required = "required" })
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            @Html.Label("customerEmail", "Email Address", new { @class = "control-label" })
+                            @Html.TextBox("customerEmail", Model?.CustomerEmail, new { @class = "form-control", @type = "email", @placeholder = "Enter your email address (e.g., john@example.com)", required = "required" })
+                            <div class="text-danger">
+                                Please enter a valid email address.
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i> Track Orders
-                        </button>
+                        <div style="margin-top: 15px;">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Track Orders
+                            </button>
+                            
+                            @if (!string.IsNullOrEmpty(Model?.CustomerEmail))
+                            {
+                                <a href="@Url.Action("Track", "Order")" class="btn btn-outline-secondary" style="margin-left: 8px;">
+                                    <i class="fas fa-sync-alt"></i> New Search
+                                </a>
+                            }
+                        </div>
                     }
                 </div>
             </div>
@@ -32,10 +45,10 @@
             <div class="card bg-light">
                 <div class="card-body">
                     <h6><i class="fas fa-info-circle"></i> How to Track Your Order</h6>
-                    <ul class="list-unstyled mb-0">
-                        <li><i class="fas fa-check text-success"></i> Enter the email address used when placing your order</li>
-                        <li><i class="fas fa-check text-success"></i> View all orders associated with your email</li>
-                        <li><i class="fas fa-check text-success"></i> Check real-time status updates</li>
+                    <ul class="list-unstyled">
+                        <li style="margin-bottom: 8px;"><i class="fas fa-check text-success"></i> Enter the email address used when placing your order</li>
+                        <li style="margin-bottom: 8px;"><i class="fas fa-check text-success"></i> View all orders associated with your email</li>
+                        <li style="margin-bottom: 8px;"><i class="fas fa-check text-success"></i> Check real-time status updates</li>
                         <li><i class="fas fa-check text-success"></i> Estimated pickup/delivery times</li>
                     </ul>
                 </div>
@@ -45,21 +58,30 @@
 
     @if (Model != null && Model.Orders != null && Model.Orders.Any())
     {
-        <div class="mt-5">
-            <h4>Your Orders</h4>
-            <p class="text-muted">Orders for: <strong>@Model.CustomerEmail</strong></p>
+        <div style="margin-top: 48px;">
+            <div class="clearfix" style="margin-bottom: 15px;">
+                <div class="pull-left">
+                    <h4>Your Orders</h4>
+                    <p class="text-muted" style="margin-bottom: 0;">Orders for: <strong>@Model.CustomerEmail</strong> (@Model.Orders.Count order@(Model.Orders.Count != 1 ? "s" : ""))</p>
+                </div>
+                <div class="pull-right">
+                    <small class="text-muted">
+                        <i class="fas fa-sync-alt"></i> Auto-refreshes every 30 seconds
+                    </small>
+                </div>
+            </div>
             
             @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
             {
-                <div class="card mb-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">Order #@order.OrderID</h6>
+                <div class="card" style="margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div class="card-header clearfix">
+                        <div class="pull-left">
+                            <h6 style="margin-bottom: 0;">Order #@order.OrderID</h6>
                             <small class="text-muted">Placed on @order.OrderDate.ToString("MMM dd, yyyy 'at' HH:mm")</small>
                         </div>
-                        <div>
-                            <span class="badge bg-@(GetStatusColor(order.Status)) fs-6">
-                                @order.Status.ToString()
+                        <div class="pull-right">
+                            <span class="label label-@(GetStatusColor(order.Status))" style="padding: 4px 8px; font-size: 0.875rem;">
+                                @GetStatusText(order.Status)
                             </span>
                         </div>
                     </div>
@@ -69,12 +91,14 @@
                                 <h6>Order Details</h6>
                                 @if (order.OrderDetails != null && order.OrderDetails.Any())
                                 {
-                                    <ul class="list-unstyled mb-0">
+                                    <ul class="list-unstyled">
                                         @foreach (var detail in order.OrderDetails)
                                         {
-                                            <li class="d-flex justify-content-between">
-                                                <span>@detail.Quantity x @detail.MenuItem.Name</span>
-                                                <span>@detail.Subtotal.ToString("C")</span>
+                                            <li class="clearfix" style="margin-bottom: 4px;">
+                                                <span class="pull-left">@detail.Quantity x @detail.MenuItem.Name</span>
+                                                <span class="pull-right price-display">
+                                                    <span class="rupee-symbol">&#8377;</span>@detail.Subtotal.ToString("N0")
+                                                </span>
                                             </li>
                                         }
                                     </ul>
@@ -82,48 +106,68 @@
                                 
                                 @if (!string.IsNullOrEmpty(order.SpecialInstructions))
                                 {
-                                    <div class="mt-2">
+                                    <div style="margin-top: 15px; padding: 8px; background-color: #f8f9fa; border-radius: 4px;">
                                         <small class="text-muted">
-                                            <strong>Special Instructions:</strong> @order.SpecialInstructions
+                                            <strong><i class="fas fa-comment"></i> Special Instructions:</strong> @order.SpecialInstructions
                                         </small>
                                     </div>
                                 }
                             </div>
-                            <div class="col-md-4 text-end">
-                                <h6>Total: @order.TotalAmount.ToString("C")</h6>
+                            <div class="col-md-4 text-right">
+                                <h6 class="price-display">
+                                    Total: <span class="rupee-symbol">&#8377;</span>@order.TotalAmount.ToString("N0")
+                                </h6>
                                 
-                                <div class="mt-3">
+                                <div style="margin-top: 15px;">
                                     @switch (order.Status)
                                     {
                                         case RestaurantOrderSystem.Models.OrderStatus.Pending:
                                             <small class="text-warning">
                                                 <i class="fas fa-clock"></i> Order received, waiting for confirmation
                                             </small>
+                                            <div style="margin-top: 4px;">
+                                                <small class="text-muted">Estimated confirmation: 5-10 minutes</small>
+                                            </div>
                                             break;
                                         case RestaurantOrderSystem.Models.OrderStatus.Confirmed:
                                             <small class="text-info">
                                                 <i class="fas fa-check"></i> Order confirmed, preparation will begin soon
                                             </small>
+                                            <div style="margin-top: 4px;">
+                                                <small class="text-muted">Estimated preparation: 15-25 minutes</small>
+                                            </div>
                                             break;
                                         case RestaurantOrderSystem.Models.OrderStatus.Preparing:
                                             <small class="text-primary">
                                                 <i class="fas fa-fire"></i> Your delicious meal is being prepared
                                             </small>
+                                            <div style="margin-top: 4px;">
+                                                <small class="text-muted">Estimated completion: 10-15 minutes</small>
+                                            </div>
                                             break;
                                         case RestaurantOrderSystem.Models.OrderStatus.Ready:
                                             <small class="text-success">
                                                 <i class="fas fa-bell"></i> Order ready for pickup/delivery!
                                             </small>
+                                            <div style="margin-top: 4px;">
+                                                <small class="text-success">Please collect your order</small>
+                                            </div>
                                             break;
                                         case RestaurantOrderSystem.Models.OrderStatus.Completed:
-                                            <small class="text-secondary">
+                                            <small class="text-muted">
                                                 <i class="fas fa-check-circle"></i> Order completed
                                             </small>
+                                            <div style="margin-top: 4px;">
+                                                <small class="text-muted">Thank you for your order!</small>
+                                            </div>
                                             break;
                                         case RestaurantOrderSystem.Models.OrderStatus.Cancelled:
                                             <small class="text-danger">
                                                 <i class="fas fa-times"></i> Order cancelled
                                             </small>
+                                            <div style="margin-top: 4px;">
+                                                <small class="text-muted">Contact us for assistance</small>
+                                            </div>
                                             break;
                                     }
                                 </div>
@@ -136,23 +180,42 @@
     }
     else if (Model != null && !string.IsNullOrEmpty(Model.CustomerEmail) && (Model.Orders == null || !Model.Orders.Any()))
     {
-        <div class="alert alert-info mt-4">
-            <i class="fas fa-info-circle"></i>
-            <strong>No orders found</strong> for email address: <strong>@Model.CustomerEmail</strong>
-            <br>
-            <small>Please check your email address or contact us if you need assistance.</small>
+        <div class="alert alert-info" style="margin-top: 30px;">
+            <div class="clearfix">
+                <i class="fas fa-info-circle fa-2x pull-left" style="margin-right: 12px;"></i>
+                <div>
+                    <h6 style="margin-bottom: 4px;">No orders found</h6>
+                    <p style="margin-bottom: 0;">
+                        No orders found for email address: <strong>@Model.CustomerEmail</strong>
+                        <br>
+                        <small>Please check your email address spelling or try the email used during checkout.</small>
+                    </p>
+                </div>
+            </div>
         </div>
     }
 
-    <div class="mt-5">
+    <div style="margin-top: 48px;">
         <div class="card bg-light">
             <div class="card-body text-center">
-                <h6>Need Help?</h6>
-                <p class="mb-2">Can't find your order or have questions?</p>
-                <p class="mb-0">
-                    <i class="fas fa-phone"></i> Call us: (555) 123-4567 | 
-                    <i class="fas fa-envelope"></i> Email: orders@restaurant.com
-                </p>
+                <h6><i class="fas fa-question-circle"></i> Need Help?</h6>
+                <p style="margin-bottom: 8px;">Can't find your order or have questions about your order status?</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="margin-bottom: 0;">
+                            <i class="fas fa-phone text-primary"></i> <strong>Call us:</strong> (555) 123-4567
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p style="margin-bottom: 0;">
+                            <i class="fas fa-envelope text-primary"></i> <strong>Email:</strong> orders@vegdelight.com
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <small class="text-muted">
+                    <i class="fas fa-clock"></i> Customer support: Mon-Sun 9:00 AM - 10:00 PM
+                </small>
             </div>
         </div>
     </div>
@@ -167,9 +230,133 @@
             case RestaurantOrderSystem.Models.OrderStatus.Confirmed: return "info";
             case RestaurantOrderSystem.Models.OrderStatus.Preparing: return "primary";
             case RestaurantOrderSystem.Models.OrderStatus.Ready: return "success";
-            case RestaurantOrderSystem.Models.OrderStatus.Completed: return "secondary";
+            case RestaurantOrderSystem.Models.OrderStatus.Completed: return "default";
             case RestaurantOrderSystem.Models.OrderStatus.Cancelled: return "danger";
-            default: return "secondary";
+            default: return "default";
         }
     }
+
+    string GetStatusText(RestaurantOrderSystem.Models.OrderStatus status)
+    {
+        switch (status)
+        {
+            case RestaurantOrderSystem.Models.OrderStatus.Pending: return "Order Received";
+            case RestaurantOrderSystem.Models.OrderStatus.Confirmed: return "Order Confirmed";
+            case RestaurantOrderSystem.Models.OrderStatus.Preparing: return "Being Prepared";
+            case RestaurantOrderSystem.Models.OrderStatus.Ready: return "Ready for Pickup";
+            case RestaurantOrderSystem.Models.OrderStatus.Completed: return "Completed";
+            case RestaurantOrderSystem.Models.OrderStatus.Cancelled: return "Cancelled";
+            default: return "Unknown";
+        }
+    }
+}
+
+@section Scripts {
+    <style>
+        .rupee-symbol {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        .price-display {
+            font-weight: 600;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .label {
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+        }
+        .label-default {
+            background-color: #777;
+        }
+        .label-primary {
+            background-color: #337ab7;
+        }
+        .label-success {
+            background-color: #5cb85c;
+        }
+        .label-info {
+            background-color: #5bc0de;
+        }
+        .label-warning {
+            background-color: #f0ad4e;
+        }
+        .label-danger {
+            background-color: #d9534f;
+        }
+    </style>
+    
+    <script>
+        // Bootstrap validation for older versions
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                for (var i = 0; i < forms.length; i++) {
+                    forms[i].addEventListener('submit', function(event) {
+                        if (this.checkValidity && this.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                    }, false);
+                }
+            }, false);
+        })();
+
+        // Auto-refresh order status if orders are displayed
+        @if (Model != null && Model.Orders != null && Model.Orders.Any())
+        {
+            bool hasActiveOrders = false;
+            foreach (var order in Model.Orders)
+            {
+                if (order.Status != RestaurantOrderSystem.Models.OrderStatus.Completed && 
+                    order.Status != RestaurantOrderSystem.Models.OrderStatus.Cancelled)
+                {
+                    hasActiveOrders = true;
+                    break;
+                }
+            }
+            
+            if (hasActiveOrders)
+            {
+                <text>
+                setInterval(function() {
+                    window.location.reload();
+                }, 30000); // Refresh every 30 seconds
+                </text>
+            }
+        }
+        
+        $(document).ready(function() {
+            // Convert HTML entities to actual rupee symbols
+            $('.rupee-symbol').each(function() {
+                var $this = $(this);
+                if ($this.html() === '&#8377;' || $this.text() === '&#8377;') {
+                    $this.html('?');
+                }
+            });
+            
+            // Fallback: if still showing question marks, replace with Rs.
+            $('.price-display').each(function() {
+                var $this = $(this);
+                var text = $this.text();
+                if (text.indexOf('?') !== -1) {
+                    var newText = text.replace(/\?/g, 'Rs. ');
+                    $this.html(newText);
+                }
+            });
+        });
+    </script>
 }

@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using RestaurantOrderSystem.Data;
+using RestaurantOrderSystem.Helpers;
 using RestaurantOrderSystem.Models;
 using RestaurantOrderSystem.Models.ViewModels;
-using RestaurantOrderSystem.Helpers;
 
 namespace RestaurantOrderSystem.Controllers
 {
@@ -16,9 +16,9 @@ namespace RestaurantOrderSystem.Controllers
         public ActionResult Checkout()
         {
             var cart = SessionHelper.GetCart(Session);
-            if (cart.Items.Count == 0)
+            if (cart == null || !cart.Items.Any())
             {
-                TempData["ErrorMessage"] = "Your cart is empty.";
+                TempData["ErrorMessage"] = "Your cart is empty. Please add items before checkout.";
                 return RedirectToAction("Index", "Menu");
             }
 
@@ -37,18 +37,23 @@ namespace RestaurantOrderSystem.Controllers
         public ActionResult Checkout(CheckoutViewModel model)
         {
             var cart = SessionHelper.GetCart(Session);
-            model.Cart = cart;
-
-            if (cart.Items.Count == 0)
+            if (cart == null || !cart.Items.Any())
             {
-                TempData["ErrorMessage"] = "Your cart is empty.";
+                TempData["ErrorMessage"] = "Your cart is empty. Please add items before checkout.";
                 return RedirectToAction("Index", "Menu");
             }
+
+            model.Cart = cart;
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Calculate total with tax
+                    var subtotal = cart.GetTotal();
+                    var tax = subtotal * 0.08m; // 8% tax
+                    var total = subtotal + tax;
+
                     // Create order
                     var order = new Order
                     {
@@ -56,14 +61,15 @@ namespace RestaurantOrderSystem.Controllers
                         CustomerEmail = model.CustomerEmail,
                         CustomerPhone = model.CustomerPhone,
                         SpecialInstructions = model.SpecialInstructions,
-                        TotalAmount = cart.GetTotal(),
+                        TotalAmount = total,
                         OrderDate = DateTime.Now,
                         Status = OrderStatus.Pending
                     };
 
-                    int orderId = db.CreateOrder(order);
+                    // Save order to database
+                    var orderId = db.CreateOrder(order);
 
-                    // Create order details
+                    // Add order details
                     foreach (var item in cart.Items)
                     {
                         var orderDetail = new OrderDetail
@@ -107,21 +113,67 @@ namespace RestaurantOrderSystem.Controllers
             return View(order);
         }
 
-        // Customer order tracking
+        // Customer order tracking - GET request for direct access
         public ActionResult Track(string email)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                ViewBag.CartItemCount = SessionHelper.GetCartItemCount(Session);
-                return View(new OrderHistoryViewModel { CustomerEmail = email });
-            }
-
-            var orders = db.GetOrders().Where(o => o.CustomerEmail.ToLower() == email.ToLower()).ToList();
             var model = new OrderHistoryViewModel
             {
-                CustomerEmail = email,
-                Orders = orders
+                CustomerEmail = email
             };
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                try
+                {
+                    var orders = db.GetOrdersByEmail(email.Trim());
+                    model.Orders = orders;
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "An error occurred while retrieving your orders: " + ex.Message;
+                    model.Orders = new System.Collections.Generic.List<Order>();
+                }
+            }
+
+            ViewBag.CartItemCount = SessionHelper.GetCartItemCount(Session);
+            return View(model);
+        }
+
+        // Customer order tracking - POST request from form submission
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Track(FormCollection form)
+        {
+            var customerEmail = form["customerEmail"];
+            
+            var model = new OrderHistoryViewModel
+            {
+                CustomerEmail = customerEmail
+            };
+
+            if (!string.IsNullOrEmpty(customerEmail))
+            {
+                try
+                {
+                    var orders = db.GetOrdersByEmail(customerEmail.Trim());
+                    model.Orders = orders;
+                    
+                    if (orders == null || !orders.Any())
+                    {
+                        TempData["InfoMessage"] = $"No orders found for email address: {customerEmail}";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "An error occurred while retrieving your orders: " + ex.Message;
+                    model.Orders = new System.Collections.Generic.List<Order>();
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Please enter a valid email address.";
+                model.Orders = new System.Collections.Generic.List<Order>();
+            }
 
             ViewBag.CartItemCount = SessionHelper.GetCartItemCount(Session);
             return View(model);
