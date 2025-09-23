@@ -3,9 +3,11 @@ using System.Web.Mvc;
 using RestaurantOrderSystem.Data;
 using RestaurantOrderSystem.Models;
 using RestaurantOrderSystem.Models.ViewModels;
+using RestaurantOrderSystem.Filters;
 
 namespace RestaurantOrderSystem.Controllers
 {
+    [AdminAuthentication]
     public class AdminController : Controller
     {
         private RestaurantDbContext db = new RestaurantDbContext();
@@ -23,6 +25,9 @@ namespace RestaurantOrderSystem.Controllers
                 RecentOrders = db.GetOrders().Take(10).ToList()
             };
 
+            // Set admin info for layout
+            SetAdminInfo();
+
             return View(model);
         }
 
@@ -31,6 +36,7 @@ namespace RestaurantOrderSystem.Controllers
         public ActionResult MenuItems()
         {
             var menuItems = db.GetMenuItems();
+            SetAdminInfo();
             return View(menuItems);
         }
 
@@ -38,6 +44,7 @@ namespace RestaurantOrderSystem.Controllers
         public ActionResult CreateMenuItem()
         {
             ViewBag.Categories = new SelectList(db.GetCategories(), "CategoryID", "Name");
+            SetAdminInfo();
             return View();
         }
 
@@ -53,6 +60,7 @@ namespace RestaurantOrderSystem.Controllers
             }
 
             ViewBag.Categories = new SelectList(db.GetCategories(), "CategoryID", "Name", menuItem.CategoryID);
+            SetAdminInfo();
             return View(menuItem);
         }
 
@@ -71,6 +79,7 @@ namespace RestaurantOrderSystem.Controllers
             }
 
             ViewBag.Categories = new SelectList(db.GetCategories(), "CategoryID", "Name", menuItem.CategoryID);
+            SetAdminInfo();
             return View(menuItem);
         }
 
@@ -86,6 +95,7 @@ namespace RestaurantOrderSystem.Controllers
             }
 
             ViewBag.Categories = new SelectList(db.GetCategories(), "CategoryID", "Name", menuItem.CategoryID);
+            SetAdminInfo();
             return View(menuItem);
         }
 
@@ -103,6 +113,7 @@ namespace RestaurantOrderSystem.Controllers
                 return HttpNotFound();
             }
 
+            SetAdminInfo();
             return View(menuItem);
         }
 
@@ -128,12 +139,14 @@ namespace RestaurantOrderSystem.Controllers
         public ActionResult Categories()
         {
             var categories = db.GetCategories();
+            SetAdminInfo();
             return View(categories);
         }
 
         // Create new category
         public ActionResult CreateCategory()
         {
+            SetAdminInfo();
             return View();
         }
 
@@ -148,6 +161,7 @@ namespace RestaurantOrderSystem.Controllers
                 return RedirectToAction("Categories");
             }
 
+            SetAdminInfo();
             return View(category);
         }
 
@@ -165,6 +179,7 @@ namespace RestaurantOrderSystem.Controllers
                 return HttpNotFound();
             }
 
+            SetAdminInfo();
             return View(category);
         }
 
@@ -179,6 +194,7 @@ namespace RestaurantOrderSystem.Controllers
                 return RedirectToAction("Categories");
             }
 
+            SetAdminInfo();
             return View(category);
         }
 
@@ -196,6 +212,7 @@ namespace RestaurantOrderSystem.Controllers
                 return HttpNotFound();
             }
 
+            SetAdminInfo();
             return View(category);
         }
 
@@ -221,6 +238,7 @@ namespace RestaurantOrderSystem.Controllers
         public ActionResult Orders()
         {
             var orders = db.GetOrders();
+            SetAdminInfo();
             return View(orders);
         }
 
@@ -239,6 +257,7 @@ namespace RestaurantOrderSystem.Controllers
             }
 
             order.OrderDetails = db.GetOrderDetails(id.Value);
+            SetAdminInfo();
             return View(order);
         }
 
@@ -259,6 +278,12 @@ namespace RestaurantOrderSystem.Controllers
             return RedirectToAction("OrderDetails", new { id = orderId });
         }
         #endregion
+
+        private void SetAdminInfo()
+        {
+            ViewBag.IsAdminLoggedIn = true;
+            ViewBag.AdminUsername = Session["AdminUsername"];
+        }
 
         protected override void Dispose(bool disposing)
         {

@@ -23,8 +23,9 @@ namespace RestaurantOrderSystem.Controllers
                 TotalOrders = db.GetTotalOrders()
             };
             
-            // Set cart count for layout
+            // Set cart count and admin info for layout
             ViewBag.CartItemCount = SessionHelper.GetCartItemCount(Session);
+            SetAdminInfo();
             
             return View(model);
         }
@@ -33,6 +34,7 @@ namespace RestaurantOrderSystem.Controllers
         {
             ViewBag.Message = "Restaurant Order System - A comprehensive solution for restaurant management and online ordering.";
             ViewBag.CartItemCount = SessionHelper.GetCartItemCount(Session);
+            SetAdminInfo();
             return View();
         }
 
@@ -40,7 +42,14 @@ namespace RestaurantOrderSystem.Controllers
         {
             ViewBag.Message = "Contact us for support or inquiries about the Restaurant Order System.";
             ViewBag.CartItemCount = SessionHelper.GetCartItemCount(Session);
+            SetAdminInfo();
             return View();
+        }
+
+        private void SetAdminInfo()
+        {
+            ViewBag.IsAdminLoggedIn = Session["IsAdminLoggedIn"] != null && (bool)Session["IsAdminLoggedIn"];
+            ViewBag.AdminUsername = Session["AdminUsername"];
         }
 
         protected override void Dispose(bool disposing)
